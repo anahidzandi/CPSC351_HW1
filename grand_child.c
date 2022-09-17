@@ -1,28 +1,26 @@
-#include <sys/types.h>
+//HW 1 - Anahid Zandi Haghighi
 #include <stdio.h>
-#include <unistd.h>
 #include <stdlib.h>
+#include <unistd.h>
 #include <sys/wait.h>
+#include <string.h>
 
-//code following professor's lecture
-int main()
+int main(int argc, char** argv)
 {
-	int i;
-	pid_t id;
-
-	id = fork(); //creats the child process
-
-	fprintf(stderr, "This is process %d \n", getpid());
-	fprintf(stderr, "id %d \n\n", id);
-
-	wait(NULL);
-	id = fork(); //creats the grandchild process
-
-	fprintf(stderr, "This is process %d \n", getpid());
-	fprintf(stderr, "id %d \n\n", id);
-	execlp("/snap/bin/firefox","firefox",NULL);
-
-	wait(NULL);
-	//sleep(40); //so we can test with htop
-	return 0;
+    pid_t child_pid;
+    child_pid = fork();
+    if (child_pid == 0)
+    {
+        pid_t grand_child_pid;
+        grand_child_pid = fork();
+        printf("This is process %d\n", getpid());
+        if (grand_child_pid == 0)
+        {
+            execlp("/snap/bin/firefox","firefox",NULL);
+        }
+    }
+    printf("This is process %d\n", getpid());
+    wait(NULL);
+    // sleep(40);
+    return 0;
 }
